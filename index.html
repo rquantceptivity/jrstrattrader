@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<h2 align="center"> JR Strategy Backtester </h2>
+
+<script>
+//------- On load, focus on Date
+window.onload = function() {
+   document.getElementById('date').focus();
+}
+
+
+//--------- Create object of arrays for tickers for ETFs and Futures
+var ticker_list =
+{       
+      ETF   :['SPY','VWO','USO'],
+      FUT:['ES','CL']
+};
+
+
+//-------function to display array of tickers based on security selection
+
+function ChooseTicker()
+{
+    var selection = document.getElementById('sl').value;
+    var new_list = ticker_list[selection];
+    
+    document.getElementById('ts').length = 0;
+    
+    var dummyOption = new Option('Select a Ticker','none',true,true);
+   
+    document.getElementById('ts').options[0] = dummyOption;
+ 
+    for(var i = 0; i < new_list.length; i++)
+    {
+      var ticker = new_list[i];
+      var opt = new Option(ticker,ticker,false,false);
+      document.getElementById('ts').options[i+1] = opt;
+    }
+}
+
+
+
+</script>
+
+
+<form name='calen' id='cal' method=GET onSubmit='return formValidation()' align='center'>
+<table align="center">
+<tr>
+<td><b> Select a Date <td ><input type="date" id='date' name="date" min='2018-01-01' max='2030-01-01' required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+</tr>
+</table>
+</form>
+<br>
+
+<form  align='center'>
+<table align="center">
+
+<td><b>Type of Security <td ><select name='sl' id='sl' size=2 onChange='return ChooseTicker();'>
+                                
+                                <option value='ETF'> ETF </option>
+                                <option value='FUT'> FUTURE </option>
+                             </select>
+                             <br>
+                             <select name='ts' id='ts' size = 1>
+                                <option selected>--------Ticker----------</option>
+                             </select>
+
+</table>
+</form>
+
+
+
+
+<body>
+  <div id="graph"></div>
+</body>
+
+
+<script>
+//--------------get today's date
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+var yyyy = today.getFullYear();
+
+if(dd<10) {
+    dd = '0'+ dd
+} 
+
+if(mm<10) {
+    mm = '0'+mm
+} 
+
+today = yyyy + '-' + mm + '-' + dd;
+document.write(today);
+document.getElementById('date').value = today;
+</script>
+
+
+<script>
+
+
+Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv', function(err, rows){
+
+function unpack(rows, key) {
+  return rows.map(function(row) {
+    return row[key];
+  });
+}
+
+var trace = {
+  x: unpack(rows, 'Date'),
+  close: unpack(rows, 'AAPL.Close'),
+  high: unpack(rows, 'AAPL.High'),
+  low: unpack(rows, 'AAPL.Low'),
+  open: unpack(rows, 'AAPL.Open'),
+
+  // cutomise colors
+  increasing: {line: {color: 'black'}},
+  decreasing: {line: {color: 'red'}},
+
+  type: 'ohlc',
+  xaxis: 'x',
+  yaxis: 'y'
+};
+
+var data = [trace];
+
+var layout = {
+  dragmode: 'zoom',
+  showlegend: true,
+  xaxis: {
+    rangeslider: {
+         visible: false
+     }
+  }
+};
+
+Plotly.plot('graph', data, layout);
+});
+</script>
+</body>
+</html>
