@@ -7,6 +7,9 @@
 <body>
 <h2 align="center"> JR Strategy Backtester </h2>
 
+<!-- Begin JavaScript --------------------------------------->
+
+
 <script>
 //------- On load, focus on Date
 window.onload = function() {
@@ -17,8 +20,8 @@ window.onload = function() {
 //--------- Create object of arrays for tickers for ETFs and Futures
 var ticker_list =
 {       
-      ETF   :['SPY','VWO','USO'],
-      FUT:['ES','CL']
+      DomETF   : ['SPY','GLD'],
+      ForETF    : ['EEM','FXI']
 };
 
 
@@ -45,6 +48,9 @@ function ChooseTicker()
 
 
 
+var num_diag = 2;
+
+
 </script>
 
 
@@ -62,11 +68,11 @@ function ChooseTicker()
 
 <td><b>Type of Security <td ><select name='sl' id='sl' size=2 onChange='return ChooseTicker();'>
                                 
-                                <option value='ETF'> ETF </option>
-                                <option value='FUT'> FUTURE </option>
+                                <option value='DomETF'> Domestic ETF </option>
+                                <option value='ForETF'> Foreign ETF </option>
                              </select>
                              <br>
-                             <select name='ts' id='ts' size = 1>
+                             <select name='ts' id='ts' size = 1 onChange='return plot_data();'>
                                 <option selected>--------Ticker----------</option>
                              </select>
 
@@ -105,7 +111,16 @@ document.getElementById('date').value = today;
 <script>
 
 
-Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv', function(err, rows){
+
+plot_data = function()
+{
+//BUILD URL FROM INPUTTED TICKER
+Plotly.purge('graph');
+url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + document.getElementById('ts').value + '.csv'
+
+
+Plotly.d3.csv(url, function(err, rows)
+{
 
 function unpack(rows, key) {
   return rows.map(function(row) {
@@ -115,12 +130,12 @@ function unpack(rows, key) {
 
 var trace = {
   x: unpack(rows, 'Date'),
-  close: unpack(rows, 'AAPL.Close'),
-  high: unpack(rows, 'AAPL.High'),
-  low: unpack(rows, 'AAPL.Low'),
-  open: unpack(rows, 'AAPL.Open'),
-
-  // cutomise colors
+  close: unpack(rows, 'Close'),
+  high: unpack(rows, 'High'),
+  low: unpack(rows, 'Low'),
+  open: unpack(rows, 'Open'),
+  
+  // customize colors
   increasing: {line: {color: 'black'}},
   decreasing: {line: {color: 'red'}},
 
@@ -129,20 +144,57 @@ var trace = {
   yaxis: 'y'
 };
 
-var data = [trace];
+
+var num_hor = 10;
+
+
+for(var i = 1; i < num_hor+1; i++)
+{
+     var col_nam = 'h' + i;
+     h_out_tmp ={
+       x: unpack(rows, 'Date'),
+       y: unpack(rows, col_nam), mode:'lines',
+          width:1,
+          line: {
+          color: 'black'
+           },
+          type: 'line'
+          };
+        var st = 'trace_hor' + i + '=' + 'h_out_tmp';
+        eval(st);
+         
+      
+};
+
+
+
+var data = [trace,trace_hor1,trace_hor2,trace_hor3,trace_hor4,trace_hor5, trace_hor6, trace_hor7, trace_hor8, trace_hor9, trace_hor10];
+
 
 var layout = {
+  width: 2000,
+  height: 1000,
   dragmode: 'zoom',
   showlegend: true,
   xaxis: {
     rangeslider: {
-         visible: false
+         visible: true
      }
   }
 };
 
 Plotly.plot('graph', data, layout);
-});
+})
+};
+
 </script>
+
+
+
+
+
+<!-- End JavaScript ----------------------------------------->
+
 </body>
 </html>
+
