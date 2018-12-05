@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,10 +12,19 @@
 
 
 <script>
-//------- On load, focus on Date
+//------- On load, prompt user password
 window.onload = function() {
-   document.getElementById('date').focus();
+   document.getElementById('user').focus();
 }
+
+
+//--------------get today's date time
+today = new Date();                       
+todayTime  = today.getTime();                 
+elapseTime = 100*24*60*60*1000;       
+expDate    = new Date(todayTime + elapseTime);  
+          
+
 
 
 //--------- Create object of arrays for tickers for ETFs and Futures
@@ -47,17 +57,28 @@ function ChooseTicker()
 }
 
 
-
-var num_diag = 2;
+//---------- Set the Cookie --------------------------------
+function setCookie() 
+{
+    var user_x = document.getElementById('user').value;
+    var pass = document.getElementById('pw').value;  
+    document.cookie  = "user=" + escape(user_x)  + ";pw=" + escape(pass) +";path=/" + ";expires=" + expDate.toGMTString(); 
+    
+}
 
 
 </script>
 
 
-<form name='calen' id='cal' method=GET onSubmit='return formValidation()' align='center'>
+<form name='name_pw' method=GET id='name_pw' align='center'>
 <table align="center">
 <tr>
-<td><b> Select a Date <td ><input type="date" id='date' name="date" min='2018-01-01' max='2030-01-01' required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+<td><b>Username<td ><input type="text" id='user' maxlength="10" required pattern="[A-z]+">
+<tr>
+<td><b>Password<td ><input type="text" id='pw' maxlength="10" required pattern="[A-Za-z0-9]+">
+<tr>
+<td><b><input type=submit value='       Enter        ' onClick="return validate();setCookie();">
+<td><input type=reset  value='Clear'> 
 </tr>
 </table>
 </form>
@@ -66,7 +87,7 @@ var num_diag = 2;
 <form  align='center'>
 <table align="center">
 
-<td><b>Type of Security <td ><select name='sl' id='sl' size=2 onChange='return ChooseTicker();'>
+<td><b>Type of Security <td ><select name='sl' id='sl' size=2 onChange='return ChooseTicker()'>
                                 
                                 <option value='DomETF'> Domestic ETF </option>
                                 <option value='ForETF'> Foreign ETF </option>
@@ -87,25 +108,7 @@ var num_diag = 2;
 </body>
 
 
-<script>
-//--------------get today's date
-var today = new Date();
-var dd = today.getDate();
-var mm = today.getMonth()+1; //January is 0!
-var yyyy = today.getFullYear();
 
-if(dd<10) {
-    dd = '0'+ dd
-} 
-
-if(mm<10) {
-    mm = '0'+mm
-} 
-
-today = yyyy + '-' + mm + '-' + dd;
-document.getElementById('date').value = today;
-
-</script>
 
 
 <script>
