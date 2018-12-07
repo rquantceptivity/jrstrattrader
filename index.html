@@ -95,7 +95,7 @@ function ChooseTicker()
                         <option value='ForETF'> Foreign ETF </option>
                         </select>
                         <br>
-                        <select name='ts' id='ts' size = 1 width = 5 onChange="return plot_data(\''+document.getElementById('ts').value + '\');">
+                        <select name='ts' id='ts' size = 1 width = 5 onChange="return plot_data(this.options[this.selectedIndex].value);">
                               <option selected>--------Ticker----------</option>
                               </select>
 </table>
@@ -113,9 +113,7 @@ plot_data = function(TICKER)
 
 Plotly.purge('graph');  //removes previous graph
 
-//TICKER = document.getElementById('ts').value;
-url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv'
-
+url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv';
 
 Plotly.d3.csv(url, function(err, rows)
 {
@@ -170,6 +168,10 @@ var data = [trace,trace_hor1,trace_hor2,trace_hor3,trace_hor4,trace_hor5, trace_
 
 
 var layout = {
+  title: TICKER,
+  titlefont:{
+   size:25
+    },
   width: 2200,
   height: 1100,
   dragmode: 'zoom',
