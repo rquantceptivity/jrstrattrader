@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,15 +7,14 @@
 <body>
 <h2 align="center"> JR Strategy Backtester </h2>
 
-
-
 <script>
-//------- On load, prompt user password ----
+//------- On load, plot SPY and focus on username ----
 window.onload = function() {
    document.getElementById('user').focus();
-   plot_data('SPY');
-  
+   plot_data('SPY');  //default plot to SPY
+   document.body.style.backgroundColor = "#d9d9d9"; //background color
 }
+
 //------------------------------------------
 
 //--------------Get today's date time ----
@@ -36,9 +34,6 @@ function setCookie()
     
 }
 //--------------------------------------------------------------------
-
-
-
 
 //--------- Create object of arrays for tickers for ETFs and Futures
 var ticker_list =
@@ -68,10 +63,7 @@ function ChooseTicker()
       document.getElementById('ts').options[i+1] = opt;
     }
 }
-
-
 </script>
-
 
 <form name='name_pw' method=GET id='name_pw' align='center'>
 <table align="center">
@@ -87,7 +79,6 @@ function ChooseTicker()
 </form>
 <br>
 
-
 <form  align='center'>
 <table align="center">
 <td><b>Type of Security <td ><select name='sl' id='sl' size=2 width=5 onChange='return ChooseTicker()'>
@@ -101,21 +92,21 @@ function ChooseTicker()
 </table>
 </form>
 
-<body><div id="graph"></div></body>
+<body><div align="center" id="graph"></div></body>
+<br>
 
 <script>
 //---------- Build the URL from selected Ticker -----------------------------------------
 //--------- and plot the stock price and horizontal lines -------------------------------
-
 
 plot_data = function(TICKER)
 {
 
 Plotly.purge('graph');  //removes previous graph
 
-url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv';
+url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv'; //get URL to CSV data
 
-Plotly.d3.csv(url, function(err, rows)
+Plotly.d3.csv(url, function(err, rows)   //plotly.js function to create plot, change params, title, etc
 {
 
 function unpack(rows, key) {
@@ -140,8 +131,7 @@ var trace = {
   yaxis: 'y'
 };
 
-
-//----- function creates 20 horizontal line plotly objects using eval
+//----- for loop creates 20 horizontal line plotly.js objects using eval, avoiding lots of code
 var num_hor = 20;
 for(var i = 1; i <= num_hor; i++)
 {
@@ -162,10 +152,8 @@ for(var i = 1; i <= num_hor; i++)
 };
 //---------------------------------------------------------
 
-
 var data = [trace,trace_hor1,trace_hor2,trace_hor3,trace_hor4,trace_hor5, trace_hor6, trace_hor7, trace_hor8, trace_hor9, trace_hor10,trace_hor11,trace_hor12,trace_hor13,
             trace_hor14,trace_hor15];
-
 
 var layout = {
   title: TICKER,
@@ -183,7 +171,7 @@ var layout = {
   }
 };
 
-Plotly.plot('graph', data, layout); //plot the data with layour
+Plotly.plot('graph', data, layout); //plot the data with layout
 })
 };
 </script>
