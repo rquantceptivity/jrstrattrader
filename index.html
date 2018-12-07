@@ -8,22 +8,35 @@
 <body>
 <h2 align="center"> JR Strategy Backtester </h2>
 
-<!-- Begin JavaScript --------------------------------------->
-//t
+
 
 <script>
-//------- On load, prompt user password
+//------- On load, prompt user password ----
 window.onload = function() {
    document.getElementById('user').focus();
+   plot_data('SPY');
+  
 }
+//------------------------------------------
 
-
-//--------------get today's date time
+//--------------Get today's date time ----
 today = new Date();                       
 todayTime  = today.getTime();                 
 elapseTime = 100*24*60*60*1000;       
 expDate    = new Date(todayTime + elapseTime);  
-          
+//---------------------------------------          
+
+//---------- Set the Cookie -----------------------------------------
+function setCookie() 
+{
+    var user_x = document.getElementById('user').value;
+    var pass = document.getElementById('pw').value;  
+    document.cookie  = "user=" + escape(user_x)  + ";pw=" + 
+    escape(pass) +";path=/" + ";expires=" + expDate.toGMTString(); 
+    
+}
+//--------------------------------------------------------------------
+
 
 
 
@@ -33,7 +46,7 @@ var ticker_list =
       DomETF   : ['SPY','GLD','IJR','XLE','VNQ'],
       ForETF    : ['EEM','FXI','EFA','EWZ']
 };
-
+//---------------------------------------   
 
 //-------function to display array of tickers based on security selection
 
@@ -57,16 +70,6 @@ function ChooseTicker()
 }
 
 
-//---------- Set the Cookie --------------------------------
-function setCookie() 
-{
-    var user_x = document.getElementById('user').value;
-    var pass = document.getElementById('pw').value;  
-    document.cookie  = "user=" + escape(user_x)  + ";pw=" + escape(pass) +";path=/" + ";expires=" + expDate.toGMTString(); 
-    
-}
-
-
 </script>
 
 
@@ -84,42 +87,34 @@ function setCookie()
 </form>
 <br>
 
+
 <form  align='center'>
 <table align="center">
-
-<td><b>Type of Security <td ><select name='sl' id='sl' size=2 onChange='return ChooseTicker()'>
-                                
-                                <option value='DomETF'> Domestic ETF </option>
-                                <option value='ForETF'> Foreign ETF </option>
-                             </select>
-                             <br>
-                             <select name='ts' id='ts' size = 1 onChange='return plot_data();'>
-                                <option selected>--------Ticker----------</option>
-                             </select>
-
+<td><b>Type of Security <td ><select name='sl' id='sl' size=2 width=5 onChange='return ChooseTicker()'>
+                        <option value='DomETF'> Domestic ETF </option>
+                        <option value='ForETF'> Foreign ETF </option>
+                        </select>
+                        <br>
+                        <select name='ts' id='ts' size = 1 width = 5 onChange="return plot_data(\''+document.getElementById('ts').value + '\');">
+                              <option selected>--------Ticker----------</option>
+                              </select>
 </table>
 </form>
 
-
-
-
-<body>
-  <div id="graph"></div>
-</body>
-
-
-
-
+<body><div id="graph"></div></body>
 
 <script>
+//---------- Build the URL from selected Ticker -----------------------------------------
+//--------- and plot the stock price and horizontal lines -------------------------------
 
 
-
-plot_data = function()
+plot_data = function(TICKER)
 {
-//BUILD URL FROM INPUTTED TICKER
-Plotly.purge('graph');
-url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + document.getElementById('ts').value + '.csv'
+
+Plotly.purge('graph');  //removes previous graph
+
+//TICKER = document.getElementById('ts').value;
+url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv'
 
 
 Plotly.d3.csv(url, function(err, rows)
@@ -148,9 +143,8 @@ var trace = {
 };
 
 
+//----- function creates 20 horizontal line plotly objects using eval
 var num_hor = 20;
-
-
 for(var i = 1; i <= num_hor; i++)
 {
      var col_nam = 'h' + i;
@@ -168,11 +162,11 @@ for(var i = 1; i <= num_hor; i++)
          
       
 };
-
+//---------------------------------------------------------
 
 
 var data = [trace,trace_hor1,trace_hor2,trace_hor3,trace_hor4,trace_hor5, trace_hor6, trace_hor7, trace_hor8, trace_hor9, trace_hor10,trace_hor11,trace_hor12,trace_hor13,
-trace_hor14,trace_hor15];
+            trace_hor14,trace_hor15];
 
 
 var layout = {
@@ -187,18 +181,10 @@ var layout = {
   }
 };
 
-Plotly.plot('graph', data, layout);
+Plotly.plot('graph', data, layout); //plot the data with layour
 })
 };
-
 </script>
-
-
-
-
-
-<!-- End JavaScript ----------------------------------------->
-
 </body>
 </html>
 
