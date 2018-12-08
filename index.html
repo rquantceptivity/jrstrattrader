@@ -104,9 +104,9 @@ var num_hor = 15;                                                               
 plot_data = function(TICKER)
 {
 
-Plotly.purge('graph');                                                                       //removes previous graph
+   Plotly.purge('graph');                                                                       //removes previous graph
 
-url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv'     //get URL to CSV data
+   url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '.csv'     //get URL to CSV data
 
 Plotly.d3.csv(url, function(err, rows)                                                       //plotly.js function/objects to create plot from CSV, change params, title,
 {
