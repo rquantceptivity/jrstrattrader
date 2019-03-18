@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,10 +44,10 @@ var ticker_list =
       DomETF   : ['SPY','IWM','GLD','IJR','XLE','VNQ','LQD','XLY','XLB','XME','IBB'],
       ForETF    : ['EEM','FXI','EFA','EWZ']
 };
-//---------------------------------------   
+//-------- List of Intervals
+var interval_list = ['ALL','20','50','100'];
 
 //-------function to display array of tickers based on security selection --------------
-
 function ChooseTicker()
 {
     var selection = document.getElementById('sl').value;
@@ -65,10 +66,29 @@ function ChooseTicker()
       document.getElementById('ts').options[i+1] = opt;
     }
 }
+//-------------------------------------------------------------------------------------
+function ChooseInterval()
+{
+    var selection = document.getElementById('interval').value;
+    var new_list = interval_list[selection];                                                //List  of tickers object of arrays
+    
+    document.getElementById('int').length = 0;
+    
+    var initialOption = new Option('ALL','none',true,true);
+   
+    document.getElementById('int').options[0] = initialOption;
+ 
+    for(var i = 0; i < new_list.length; i++)
+    {
+      var int_x = new_list[i];
+      var opt = new Option(int_x,int_x,false,false);
+      document.getElementById('int').options[i+1] = opt;
+    }
+}
+
 //--------------------------------------------------------------------------------------  
 </script>
 <br>
-
 <form  align='center'>
 <table align="center">
 <td><b>Type of Security <td ><select name='sl' id='sl' size=2 width=5 onChange='return ChooseTicker()'>
@@ -82,6 +102,20 @@ function ChooseTicker()
 </form>
 <br>
 
+<br>
+<form  align='center'>
+<table align="center">
+<td><b>Lookback Window<td ><select name='interval' id='interval' size=5 width=10 onChange='return ChooseInterval()'>
+            <option value='DomETF'> Domestic ETF </option>
+            <option value='ForETF'> Foreign ETF </option>
+                </select><br>
+                <select name='ts' id='int' size = 5 width = 10 onChange="return plot_data(this.options[this.selectedIndex].value);">
+                <option selected>--------Interval----------</option>
+                </select>
+</table>
+</form>
+<br>
+
 <body><div align="center" id="graph"></div></body>
 
 <script>
@@ -90,12 +124,12 @@ function ChooseTicker()
 
 var num_hor = 15;                                                                            //number of horizontal lines to create
 
-plot_data = function(TICKER)
+plot_data = function(TICKER,INTERVAL)
 {
 
    Plotly.purge('graph');                                                                       //removes previous graph
 
-   url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '_100.csv'     //get URL to CSV data
+   url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '_' + INTERVAL + '.csv'     //get URL to CSV data
 
 Plotly.d3.csv(url, function(err, rows)                                                       //plotly.js function/objects to create plot from CSV, change params, title,
 {
