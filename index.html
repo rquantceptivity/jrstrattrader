@@ -81,7 +81,7 @@ function ChooseInterval()
     for(var i = 0; i < new_list.length; i++)
     {
       var int_x = new_list[i];
-      var opt = new Option(int_x,int_x,false,false);
+      var opt = new Option(INTERVAL,INTERVAL,false,false);
       document.getElementById('int').options[i+1] = opt;
     }
 }
@@ -106,10 +106,8 @@ function ChooseInterval()
 <form  align='center'>
 <table align="center">
 <td><b>Lookback Window<td ><select name='interval' id='interval' size=5 width=10 onChange='return ChooseInterval()'>
-            <option value='DomETF'> Domestic ETF </option>
-            <option value='ForETF'> Foreign ETF </option>
                 </select><br>
-                <select name='ts' id='int' size = 5 width = 10 onChange="return plot_data(this.options[this.selectedIndex].value);">
+                <select name='tsx' id='int' size = 5 width = 10 onChange="return plot_data(this.options[this.selectedIndex].value);">
                 <option selected>--------Interval----------</option>
                 </select>
 </table>
