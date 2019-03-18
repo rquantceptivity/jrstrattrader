@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<h2 align="center"> JR Strategy Testing (programmatic S/R lines on 1-min bars, charts show daily close prices) </h2>
+
+<script>
+//------- On load, plot SPY and focus on username ----
+window.onload = function() {
+   document.body.style.backgroundColor = "#d9d9d9";                                  //background color CSS
+   plot_data('SPY');                                                                 //default plot to SPY
+   document.getElementById('user').focus();                                          //focus on username
+   
+   
+}
+
+//------------------------------------------
+
+//--------------Get today's date time ----
+today = new Date();                       
+todayTime  = today.getTime();                 
+elapseTime = 100*24*60*60*1000;       
+expDate    = new Date(todayTime + elapseTime);  
+//---------------------------------------          
+
+//---------- Set the Cookie -----------------------------------------
+function setCookie() 
+{
+    var user_x = document.getElementById('user').value;
+    var pass = document.getElementById('pw').value;  
+    document.cookie  = "user=" + escape(user_x)  + ";pw=" + 
+    escape(pass) +";path=/" + ";expires=" + expDate.toGMTString(); 
+    
+}
+//--------------------------------------------------------------------
+
+//--------- Create object of arrays for tickers for ETFs and Futures
+var ticker_list =
+{       
+      DomETF   : ['SPY','IWM','GLD','IJR','XLE','VNQ','LQD','XLY','XLB','XME','IBB'],
+      ForETF    : ['EEM','FXI','EFA','EWZ']
+};
+//---------------------------------------   
+
+//-------function to display array of tickers based on security selection --------------
+
+function ChooseTicker()
+{
+    var selection = document.getElementById('sl').value;
+    var new_list = ticker_list[selection];                                                //List  of tickers object of arrays
+    
+    document.getElementById('ts').length = 0;
+    
+    var initialOption = new Option('Select a Ticker','none',true,true);
+   
+    document.getElementById('ts').options[0] = initialOption;
+ 
+    for(var i = 0; i < new_list.length; i++)
+    {
+      var ticker = new_list[i];
+      var opt = new Option(ticker,ticker,false,false);
+      document.getElementById('ts').options[i+1] = opt;
+    }
+}
+//--------------------------------------------------------------------------------------  
+</script>
+<br>
+
+<form  align='center'>
+<table align="center">
+<td><b>Type of Security <td ><select name='sl' id='sl' size=2 width=5 onChange='return ChooseTicker()'>
+            <option value='DomETF'> Domestic ETF </option>
+            <option value='ForETF'> Foreign ETF </option>
+                </select><br>
+                <select name='ts' id='ts' size = 1 width = 5 onChange="return plot_data(this.options[this.selectedIndex].value);">
+                <option selected>--------Ticker----------</option>
+                </select>
+</table>
+</form>
+<br>
+
+<body><div align="center" id="graph"></div></body>
+
+<script>
+//---------- Build the URL from selected Ticker -----------------------------------------
+//--------- and plot the stock price and horizontal lines -------------------------------
+
+var num_hor = 15;                                                                            //number of horizontal lines to create
+
+plot_data = function(TICKER)
+{
+
+   Plotly.purge('graph');                                                                       //removes previous graph
+
+   url = 'https://raw.githubusercontent.com/rquantceptivity/Data/master/' + TICKER + '_100.csv'     //get URL to CSV data
+
+Plotly.d3.csv(url, function(err, rows)                                                       //plotly.js function/objects to create plot from CSV, change params, title,
+{
+
+function unpack(rows, key)                                                                   
+{
+  return rows.map(function(row) 
+  {
+    return row[key];
+  });
+}
+
+//---------------- Creates the trace object of the ETF price to graph
+var trace = {
+  x: unpack(rows, 'Date'),
+  close: unpack(rows, 'Close'),
+  high: unpack(rows, 'High'),
+  low: unpack(rows, 'Low'),
+  open: unpack(rows, 'Open'),
+  
+  // customize colors
+  increasing: {line: {color: 'black'}},
+  decreasing: {line: {color: 'red'}},
+
+  type: 'ohlc',
+  xaxis: 'x',
+  yaxis: 'y'
+};
+//--------------------------------------------------------------------------------------  
+//----- for loop creates 15 horizontal line plotly.js objects using eval, avoiding lots of code
+
+for(var i = 1; i <= num_hor; i++)
+{
+     var col_nam = 'h' + i;
+     h_out_tmp ={
+       x: unpack(rows, 'Date'),
+       y: unpack(rows, col_nam), mode:'lines',
+          width:1,
+          line: {
+          color: 'black'
+           },
+          type: 'line'
+          };
+        var st = 'trace_hor' + i + '=' + 'h_out_tmp';
+        eval(st);
+         
+      
+};
+//--------------------------------------------------------------------------------------  
+//-------------------------------- create the data object
+
+var data = [trace,trace_hor1,trace_hor2,trace_hor3,trace_hor4,trace_hor5, trace_hor6, trace_hor7, trace_hor8, 
+            trace_hor9, trace_hor10,trace_hor11,trace_hor12,trace_hor13,
+            trace_hor14,trace_hor15];
+
+var layout = {
+  title: TICKER,
+  titlefont:{
+   size:25
+    },
+  width: 2200,
+  height: 1100,
+  dragmode: 'zoom',
+  showlegend: false,
+  xaxis: {
+    rangeslider: {
+         visible: false
+     }
+  }
+};
+//--------------------------------------------------------------------------------------  
+Plotly.plot('graph', data, layout);                                                               //plot the data with layout
+})
+};
+</script>
+</body>
+</html>
+
