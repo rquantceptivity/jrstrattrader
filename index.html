@@ -106,6 +106,7 @@ function ChooseInterval()
 <form  align='center'>
 <table align="center">
 <td><b>Lookback Window<td ><select name='interval' id='interval' size=5 width=10 onChange='return ChooseInterval()'>
+				<option value='ForETF'> Foreign ETF </option>
                 </select><br>
                 <select name='tsx' id='int' size = 5 width = 10 onChange="return plot_data(this.options[this.selectedIndex].value);">
                 <option selected>--------Interval----------</option>
