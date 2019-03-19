@@ -45,7 +45,7 @@ var ticker_list =
       ForETF    : ['EEM','FXI','EFA','EWZ']
 };
 //-------- List of Intervals
-var interval_list = ['ALL','20','50','100'];
+var interval_list = {INTERVAL_X:['ALL','20','50','100']};
 
 //-------function to display array of tickers based on security selection --------------
 function ChooseTicker()
@@ -106,7 +106,7 @@ function ChooseInterval()
 <form  align='center'>
 <table align="center">
 <td><b>Lookback Window<td ><select name='interval' id='interval' size=5 width=10 onChange='return ChooseInterval()'>
-				<option value='ForETF'> Foreign ETF </option>
+				<option value='INTERVAL_X'> Interval Select </option>
                 </select><br>
                 <select name='tsx' id='int' size = 5 width = 10 onChange="return plot_data(this.options[this.selectedIndex].value);">
                 <option selected>--------Interval----------</option>
