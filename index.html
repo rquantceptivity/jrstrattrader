@@ -45,7 +45,8 @@ var ticker_list =
 };
 //-------- List of Intervals
 var interval_list = {
-INTERVAL_X:['ALL','20','50','100']
+INTERVAL_X:['ALL','20','50','100'],
+INTERVAL_X2:['ALL','20','50','100']
 };
 
 //-------function to display array of tickers based on security selection --------------
@@ -121,6 +122,7 @@ function getvalue() {
 <table align="center">
 <td><b>Lookback Window<td ><select name='interval' id='interval' size=1 width=10 onChange='return ChooseInterval()'>
 				<option value='INTERVAL_X'> Interval Select </option>
+				<option value='INTERVAL_X2'> Interval Select </option>
                 </select><br>
                 <select name='tsx' id='int' size = 5 width = 10 onChange="return getvalue();">
                 <option selected>--------Interval----------</option>
