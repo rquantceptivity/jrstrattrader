@@ -44,7 +44,9 @@ var ticker_list =
       ForETF    : ['EEM','FXI','EFA','EWZ']
 };
 //-------- List of Intervals
-var interval_list = {INTERVAL_X:['ALL','20','50','100']};
+var interval_list = {
+INTERVAL_X:['ALL','20','50','100']
+};
 
 //-------function to display array of tickers based on security selection --------------
 function ChooseTicker()
@@ -85,13 +87,7 @@ function ChooseInterval()
     }
 }
 
-function getvalue() {
-  var fval = document.getElementById('ts').value;
-  
-  var sval = document.getElementById('int').value;
-  
-  return plot_data(fval,sval);
-}
+
 
 
 
@@ -150,6 +146,14 @@ function unpack(rows, key)
   {
     return row[key];
   });
+}
+
+function getvalue() {
+  var fval = document.getElementById('ts').value;
+  
+  var sval = document.getElementById('int').value;
+  
+  return plot_data(fval,sval);
 }
 
 //---------------- Creates the trace object of the ETF price to graph
