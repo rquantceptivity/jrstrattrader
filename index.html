@@ -87,6 +87,13 @@ function ChooseInterval()
     }
 }
 
+function getvalue() {
+  var fval = document.getElementById('ts').value;
+  
+  var sval = document.getElementById('int').value;
+  
+  return plot_data(fval,sval);
+}
 
 
 
@@ -148,13 +155,7 @@ function unpack(rows, key)
   });
 }
 
-function getvalue() {
-  var fval = document.getElementById('ts').value;
-  
-  var sval = document.getElementById('int').value;
-  
-  return plot_data(fval,sval);
-}
+
 
 //---------------- Creates the trace object of the ETF price to graph
 var trace = {
